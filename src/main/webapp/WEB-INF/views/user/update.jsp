@@ -17,7 +17,7 @@
 				<form id="join-form" name="joinForm" method="post" action="${pageContext.servletContext.contextPath }/user/update">
 					<input type="hidden" name="no" value=${authUser.no }>	
 					<label class="block-label" for="name">이름</label>
-					<input id="name" name="name" type="text" value="${userVo.name }" disabled>
+					<input id="name" name="name" type="text" value="">
 
 					<label class="block-label" for="email">이메일</label>
 					<input id="email" name="email" type="text" value="${userVo.email }" disabled>
@@ -28,13 +28,13 @@
 					<fieldset>
 						<legend>성별</legend>
 						<c:choose>
-							<c:when test='${userVo.gender eq "femail" }'>
-								<label>여</label> <input type="radio" name="gender" value="female" checked="checked" disabled>
-								<label>남</label> <input type="radio" name="gender" value="male" disabled>
+							<c:when test='${userVo.gender eq "female" }'>
+								<label>여</label> <input type="radio" name="gender" value="female" checked="checked">
+								<label>남</label> <input type="radio" name="gender" value="male">
 							</c:when>
 							<c:otherwise>
-								<label>여</label> <input type="radio" name="gender" value="female" disabled>
-								<label>남</label> <input type="radio" name="gender" value="male" checked="checked" disabled>
+								<label>여</label> <input type="radio" name="gender" value="female">
+								<label>남</label> <input type="radio" name="gender" value="male" checked="checked">
 							</c:otherwise>
 						</c:choose>
 					</fieldset>
