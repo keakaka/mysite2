@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+	
+	<insert id="firstInsert" parameterType="boardvo">
+		<![CDATA[
+			insert into board values(null, #{writerNo }, #{title }, #{content }, now(), 0, 1, 1, 0, 'on')
+		]]>
+	</insert>
+	
+	<insert id="insertBoard" parameterType="boardvo">
+		<![CDATA[
+			insert into board values(null, #{writerNo }, #{title }, #{content }, now(), 0, (select max(group_no)+1 from board b), 1, 0, 'on')
+		]]>
+	</insert>
+	
+	<update id="updateNo" parameterType="boardvo">
+		<![CDATA[
+			update board set order_no = order_no+1 where order_no > #{orderNo } and group_no = #{groupNo }
+		]]>
+	</update>
+	
+	<select id="firstCheck" resultType="string">
+		<![CDATA[
+			select max(group_no) from board
+		]]>
+	</select>
+
+	<insert id="insertReply" parameterType="boardvo">
+		<![CDATA[
+			insert into board values(null, #{writerNo }, #{title }, #{content }, now(), 0, #{groupNo }, #{orderNo }+1, #{depth }+1, 'on')
+		]]>
+	</insert>
+	
+	<select id="selectList" resultType="boardvo">
+		<![CDATA[
+			select b.no, user_no writerNo, title, content, u.name writer, date_format(write_date, '%Y-%m-%d %H:%i') writeDate, hit, group_no, order_no, depth, status from board b join user u on (b.user_no = u.no) order by group_no desc, order_no
+		]]>
+	</select>
+	
+	<select id="selectOne" resultType="boardvo" parameterType="long">
+		<![CDATA[
+			select b.no, user_no writerNo, title, content, u.name writer, date_format(write_date, '%Y-%m-%d %H:%i') writeDate, hit, group_no groupNo, order_no orderNo, depth, status from board b join user u on (b.user_no = u.no) where b.no = #{no}
+		]]>
+	</select>
+	
+	<select id="getLastIndex" resultType="long">
+		<![CDATA[
+			select max(no) from board
+		]]>
+	</select>
+	
+	<select id="getFileLastIndex" resultType="long">
+		<![CDATA[
+			select max(no) from file
+		]]>
+	</select>
+	
+	<update id="delete" parameterType="long">
+		<![CDATA[
+			update board set status = 'off' where no = #{no }
+		]]>
+	</update>
+	
+	<update id="updateBoard" parameterType="boardvo">
+		<![CDATA[
+			update board set title = #{title }, content = #{content }, write_date = now() where no = #{no }
+		]]>
+	</update>
+
+	<insert id="insertFile" parameterType="filevo">
+		<![CDATA[
+			insert into file values(null, #{boardNo }, #{url }, #{oriName }, #{changeName }, #{path }, #{size })
+		]]>
+	</insert>
+	
+	<delete id="deleteErrorFile" parameterType="long">
+		<![CDATA[
+			delete from file where no = #{no }
+		]]>
+	</delete>
+	
+	<select id="getFileVo" parameterType="long" resultType="filevo">
+		<![CDATA[
+			select no, board_no boardNo, url, ori_name oriName, change_name changeName, path, size  from file where board_no = #{value }
+		]]>
+	</select>
+	
+	<update id="updateHit" parameterType="long">
+		<![CDATA[
+			update board set hit = hit+1 where no = #{no }
+		]]>
+	</update>
+	
+	<select id="getListSize" resultType="int">
+		select count(no) from board
+	</select>
+</mapper>

@@ -8,14 +8,14 @@
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="${pageContext.servletContext.contextPath }/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+<link href="${PATH }/assets/css/guestbook.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div id="container">
 		<c:import url='/WEB-INF/views/includes/header.jsp' />
 		<div id="content">
 			<div id="guestbook">
-				<form action="${pageContext.servletContext.contextPath }/guestbook/insert" method="post">
+				<form action="${PATH }/guestbook/insert" method="post">
 					<table>
 						<tr>
 							<td>이름</td><td><input type="text" name="name"></td>
@@ -38,7 +38,7 @@
 									<td>[${count-status.index }]</td>
 									<td>${vo.name }</td>
 									<td>${vo.regDate }</td>
-									<td><a href="${pageContext.servletContext.contextPath }/guestbook/deleteform?no=${vo.no }">삭제</a></td>
+									<td><a href="${PATH }/guestbook/deleteform?no=${vo.no }&password=1111">삭제</a></td>
 								</tr>
 								<tr>
 									<td colspan=4>

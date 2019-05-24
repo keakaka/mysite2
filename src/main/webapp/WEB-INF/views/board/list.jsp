@@ -1,23 +1,18 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>  
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="/assets/css/board.css" rel="stylesheet" type="text/css">
+<link href="${PATH }/assets/css/board.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div id="container">
-		<div id="header">
-			<h1>MySite</h1>
-			<ul>
-				<li><a href="">로그인</a><li>
-				<li><a href="">회원가입</a><li>
-				<li><a href="">회원정보수정</a><li>
-				<li><a href="">로그아웃</a><li>
-				<li>님 안녕하세요 ^^;</li>
-			</ul>
-		</div>
+		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
 				<form id="search_form" action="" method="post">
@@ -32,47 +27,76 @@
 						<th>조회수</th>
 						<th>작성일</th>
 						<th>&nbsp;</th>
-					</tr>				
+					</tr>		
+					<c:set var='count' value='${fn:length(list) }'/>
+					<c:forEach items='${list }' var='vo' varStatus='status'>
+					<c:choose>
+					<c:when test="${vo.depth != 0 }">
 					<tr>
-						<td>3</td>
-						<td><a href="">세 번째 글입니다.</a></td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-11 12:04:20</td>
-						<td><a href="" class="del">삭제</a></td>
+						<td>${count-status.index }</td>
+						<c:if test="${vo.status eq 'on' }">
+						<td style="text-align:left; padding-left:${20*vo.depth}px"><img width="20px" height="20px" src="${PATH }/assets/images/reply.png"/><a href="${PATH }/board/view?no=${vo.no}">${vo.title }</a></td>
+						</c:if>
+						<c:if test="${vo.status eq 'off' }">
+						<td style="text-align:left; padding-left:${20*vo.depth}px">삭제된 게시물입니다.</td>
+						</c:if>
+						<td>${vo.writer }</td>
+						<td>${vo.hit }</td>
+						<td>${vo.writeDate }</td>
+						<c:if test="${authUser.no eq vo.writerNo && vo.status ne 'off' }">
+						<td><a href="${PATH }/board/delete?no=${vo.no }" class="del">삭제</a></td>
+						</c:if>
 					</tr>
+					</c:when>
+					<c:otherwise>
 					<tr>
-						<td>2</td>
-						<td><a href="">두 번째 글입니다.</a></td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-02 12:04:12</td>
-						<td><a href="" class="del">삭제</a></td>
+						<td>${count-status.index }</td>
+						<c:if test="${vo.status eq 'on' }">
+						<td style="text-align:left; padding-left:${20*vo.depth}px"><a href="${PATH }/board/view?no=${vo.no}">${vo.title }</a></td>
+						</c:if>
+						<c:if test="${vo.status eq 'off' }">
+						<td style="text-align:left; padding-left:${20*vo.depth}px">삭제된 게시물입니다.</td>
+						</c:if>
+						<td>${vo.writer }</td>
+						<td>${vo.hit }</td>
+						<td>${vo.writeDate }</td>
+						<c:if test="${authUser.no eq vo.writerNo && vo.status ne 'off' }">
+						<td><a href="${PATH }/board/delete?no=${vo.no }" class="del">삭제</a></td>
+						</c:if>
 					</tr>
-					<tr>
-						<td>1</td>
-						<td><a href="">첫 번째 글입니다.</a></td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-09-25 07:24:32</td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
+					</c:otherwise>
+					</c:choose>
+					</c:forEach>
 				</table>
+				
+				<!-- pager 추가 -->
+				<div class="pager">
+					<ul>
+						<li><a href="">◀</a></li>
+						<li><a href="">1</a></li>
+						<li class="selected">2</li>
+						<li><a href="">3</a></li>
+						<li>4</li>
+						<li>5</li>
+						<li><a href="">▶</a></li>
+					</ul>
+				</div>					
+				<!-- pager 추가 -->
+				
 				<div class="bottom">
-					<a href="" id="new-book">글쓰기</a>
+					<c:choose>
+					<c:when test='${empty authUser }'>
+						<a href="${PATH }/user/login" id="new-book">글쓰기는 로그인 필요 </a>
+					</c:when>
+					<c:otherwise>
+						<a href="${PATH }/board/write" id="new-book">글쓰기</a>
+					</c:otherwise>
+					</c:choose>
 				</div>				
 			</div>
 		</div>
-		<div id="navigation">
-			<ul>
-				<li><a href="">안대혁</a></li>
-				<li><a href="">방명록</a></li>
-				<li><a href="">게시판</a></li>
-			</ul>
-		</div>
-		<div id="footer">
-			<p>(c)opyright 2015, 2016, 2017, 2018</p>
-		</div>
+		<c:import url="/WEB-INF/views/includes/navigation.jsp"/>
+		<c:import url="/WEB-INF/views/includes/footer.jsp"/>
 	</div>
 </body>
 </html>

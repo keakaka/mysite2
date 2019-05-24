@@ -1,60 +1,64 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>  
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%pageContext.setAttribute("newline", "\n");%>
 <!DOCTYPE html>
 <html>
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="/assets/css/board.css" rel="stylesheet" type="text/css">
+<link href="${PATH }/assets/css/board.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div id="container">
-		<div id="header">
-			<h1>MySite</h1>
-			<ul>
-				<li><a href="">ë¡ê·¸ì¸</a><li>
-				<li><a href="">íìê°ì</a><li>
-				<li><a href="">íìì ë³´ìì </a><li>
-				<li><a href="">ë¡ê·¸ìì</a><li>
-				<li>ë ìëíì¸ì ^^;</li>
-			</ul>
-		</div>
+		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board" class="board-form">
 				<table class="tbl-ex">
+					<input type="hidden" value="${vo.groupNo }" name="groupNo"/>
+					<input type="hidden" value="${vo.orderNo }" name="orderNo"/>
+					<input type="hidden" value="${vo.depth }" name="depth"/>
 					<tr>
-						<th colspan="2">ê¸ë³´ê¸°</th>
+						<th colspan="4">글보기</th>
 					</tr>
 					<tr>
-						<td class="label">ì ëª©</td>
-						<td>ì ëª©ìëë¤.</td>
+						<td class="label">제목</td>
+						<td>${vo.title }</td>
 					</tr>
 					<tr>
-						<td class="label">ë´ì©</td>
-						<td>
+						<td class="label">작성자</td>
+						<td>${vo.writer }</td>
+						<td class="label">작성일</td>
+						<td>${vo.writeDate }</td>
+					</tr>
+					<tr>
+						<td class="label">첨부파일</td>
+						<td colspan="3">
+							<a href="${PATH }/board/fileDown?downUrl=${fileVo.url }&oriName=${fileVo.oriName }">${fileVo.oriName }<sub>&nbsp; (${fileVo.size }KB)</sub></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">내용</td>
+						<td colspan="3">
 							<div class="view-content">
-								ë´ì© 1ìëë¤.<br>
-								ë´ì© 2ìëë¤.<br>
-								ë´ì© 3ìëë¤.
+								${vo.content }
 							</div>
 						</td>
 					</tr>
 				</table>
 				<div class="bottom">
-					<a href="">ê¸ëª©ë¡</a>
-					<a href="">ê¸ìì </a>
+					<a href="${PATH }/board/list">글목록</a>
+					<c:if test="${authUser.no eq vo.writerNo }">
+					<a href="${PATH }/board/update?no=${vo.no }&writerNo=${authUser.no }">글수정</a>
+					</c:if>
+					<a href="${PATH }/board/reply?no=${vo.no }&writerNo=${authUser.no }&groupNo=${vo.groupNo}&orderNo=${vo.orderNo}&depth=${vo.depth}">답글달기</a>
 				</div>
 			</div>
 		</div>
-		<div id="navigation">
-			<ul>
-				<li><a href="">ìëí</a></li>
-				<li><a href="">ë°©ëªë¡</a></li>
-				<li><a href="">ê²ìí</a></li>
-			</ul>
-		</div>
-		<div id="footer">
-			<p>(c)opyright 2015, 2016, 2017, 2018</p>
-		</div>
+		<c:import url="/WEB-INF/views/includes/navigation.jsp"/>
+		<c:import url="/WEB-INF/views/includes/footer.jsp"/>
 	</div>
 </body>
 </html>
