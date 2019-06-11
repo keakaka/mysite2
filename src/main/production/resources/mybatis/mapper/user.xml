@@ -15,24 +15,24 @@
 	
 	<select id="getByEmailAndPassword" resultType="uservo" parameterType="map">
 		<![CDATA[
-			select no, name from user where email=#{email } and password=#{password }
+			select no, name from member where email=#{email } and password=#{password }
 		]]>
 	</select>
 	
 	<select id="getByNo" resultType="uservo" parameterType="long">
 		<![CDATA[
-			select name, email, gender from user where no = #{no }
+			select name, email, gender from member where no = #{no }
 		]]>
 	</select>
 	<select id="getByEmail" resultType="uservo" parameterType="string">
 		<![CDATA[
-			select no, name, email, gender from user where email = #{email }
+			select no, name, email, gender from member where email = #{email }
 		]]>
 	</select>
 
 	<update id="update" parameterType="uservo">
 		<![CDATA[
-			update user 
+			update member 
 			set name = #{name }, 
 				
 		]]> 
